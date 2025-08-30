@@ -1,4 +1,5 @@
 const { GoogleGenAI } = require("@google/genai");
+const fs = require("fs");
 
 require("dotenv").config();
 
@@ -21,4 +22,48 @@ async function run() {
   }
 }
 
-run();
+// run();
+
+// 1.function load ไฟล์ flood-index-thairath.json as json
+function loadFloodIndex() {
+  const data = fs.readFileSync("flood-index-thairath.json");
+  return JSON.parse(data);
+}
+
+// 2. function scrape
+
+async function scrapeAndSave(url) {
+  try {
+    // 1. โหลด HTML with fetch
+    const response = await fetch(url);
+    const data = await response.text();
+
+    // 2. ใช้ cheerio เพื่อ extract ข้อมูล
+    const $ = cheerio.load(data);
+
+    // ตัวอย่าง: ดึง title และ paragraphs
+    const title = $("title").text();
+    const paragraphs = [];
+    $("p").each((i, el) => {
+      paragraphs.push($(el).text().trim());
+    });
+
+    // 3. สร้าง JSON object
+    const result = {
+      url,
+      title,
+      content: paragraphs,
+      scrapedAt: new Date().toISOString()
+    };
+
+    // 4. เขียนไฟล์ JSON
+    fs.writeFileSync("output.json", JSON.stringify(result, null, 2), "utf-8");
+
+    console.log("✅ Scraping complete! Data saved to output.json");
+  } catch (err) {
+    console.error("❌ Error scraping site:", err.message);
+  }
+}
+
+let data = loadFloodIndex();
+
