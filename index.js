@@ -65,5 +65,6 @@ async function scrapeAndSave(url) {
   }
 }
 
+// 1. load Flood Index
 let data = loadFloodIndex();
 
