@@ -1,0 +1,19 @@
+```json
+
+[
+
+  {
+
+    "date": "2024-02-12",
+
+    "location": "สมุทรปราการ",
+
+    "severity": "high",
+
+    "url": "https://www.thairath.co.th/news/local/central/2762435"
+
+  }
+
+]
+
+```
